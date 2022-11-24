@@ -2,7 +2,7 @@ from telethon import TelegramClient
 import random
 api_id = int(input("Input api_id\n"))
 api_hash = input("Input api_hash\n")
-channel_name = input("Input channel link")
+channel_name = input("Input channel link\n")
 users_list = []
 with TelegramClient('anon', api_id, api_hash) as client:
     user_name = client.loop.run_until_complete(client.get_me()).username
