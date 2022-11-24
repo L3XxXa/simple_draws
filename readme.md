@@ -8,6 +8,6 @@ python main.py
 ```
 ### Required
 - Python 3
-- Telegram account and 
+- Telegram account and channel
 - API_ID and API_HASH (to get them [visit](https://my.telegram.org/))
 - Telethon (will be installed)
