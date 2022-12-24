@@ -13,7 +13,7 @@ with TelegramClient('anon', api_id, api_hash) as client:
     for i in range(len(users)):
 =======
 
-def workWithApi():
+def workWithApi(prize: str, amount: int):
     api_id = int(input("Input api_id\n"))
     api_hash = input("Input api_hash\n")
     channel_name = input("Input channel link")
@@ -38,6 +38,7 @@ def runForSingleWinner():
     }
     ]
     answer = prompt(question)
+    workWithApi(answer["prize"], 1)
 
 def main():
     question = [
