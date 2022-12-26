@@ -15,6 +15,8 @@ def work_with_api():
     global api_hash
     global channel_name
     users_list = []
+    print(type(api_hash), api_hash)
+    print(type(api_id), api_id)
     with TelegramClient('anon', api_id, api_hash) as client:
         user_name = client.loop.run_until_complete(client.get_me()).username
         users = client.loop.run_until_complete(client.get_participants(channel_name))
@@ -22,9 +24,10 @@ def work_with_api():
             users_list.append(users[i].username)
         users_list.remove(user_name)
         random.shuffle(users_list)
-        winner = users_list[0]
-        client.loop.run_until_complete(
-            client.send_message(channel_name, f"И ПОБЕДИТЕЛЬ РОЗЫГРЫША - @{winner}. НАПИШИ МНЕ ПЫЖЫ, КСТА, ПОЗДРАВЛЯЮ С ПОБЕДОЙ")) #Change the text, but don't forget about var winner
+        winners = users_list[0:prize_amount]
+        for i in range(0, prize_amount):
+            client.loop.run_until_complete(
+                client.send_message(channel_name, f"{i+1} place. Winner @{winners[i]}. Prize: {prize[i]}")) #Change the text, but don't forget about var winner
 
 def ask_for_prize():
     global prize
@@ -73,8 +76,9 @@ def main():
         }
     ]
     answer = prompt(question)
-    api_hash = answer['api_hash']
-    channel_name = answer['channel_name'] 
+    api_hash = str(answer['api_hash'].split(" "))
+    api_id = int(answer['api_id'])    
+    channel_name = str(answer['channel_name'].split(" ")) 
     ask_winners_amount()
 
 def ask_winners_amount():
