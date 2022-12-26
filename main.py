@@ -7,11 +7,13 @@ import random
 api_id = 0
 api_hash = ""
 channel_name = ""
+prize = []
+prize_amount = 0
 
 def work_with_api():
-    api_id = int(input("Input api_id\n"))
-    api_hash = input("Input api_hash\n")
-    channel_name = input("Input channel link")
+    global api_id 
+    global api_hash
+    global channel_name
     users_list = []
     with TelegramClient('anon', api_id, api_hash) as client:
         user_name = client.loop.run_until_complete(client.get_me()).username
@@ -24,7 +26,8 @@ def work_with_api():
         client.loop.run_until_complete(
             client.send_message(channel_name, f"И ПОБЕДИТЕЛЬ РОЗЫГРЫША - @{winner}. НАПИШИ МНЕ ПЫЖЫ, КСТА, ПОЗДРАВЛЯЮ С ПОБЕДОЙ")) #Change the text, but don't forget about var winner
 
-def run_for_single_winner():
+def ask_for_prize():
+    global prize
     question = [{
         'type': 'input',
         'name': 'prize',
@@ -32,6 +35,21 @@ def run_for_single_winner():
     }
     ]
     answer = prompt(question)
+    answer_str = answer['prize']
+    prize = answer_str.split(" ")
+    while len(prize) != prize_amount:
+        print(f"You not entered {prize_amount} prizes. Try again")
+        question = [{
+            'type': 'input',
+            'name': 'prize',
+            'message': 'Enter your prize'
+            }
+        ]
+        answer = prompt(question)
+        answer_str = answer['prize']
+        prize = answer_str.split(" ")
+    work_with_api()
+    
 
 def main():
     global api_id
@@ -55,12 +73,12 @@ def main():
         }
     ]
     answer = prompt(question)
-    api_id = int(answer['api_id'])
     api_hash = answer['api_hash']
     channel_name = answer['channel_name'] 
     ask_winners_amount()
 
 def ask_winners_amount():
+    global prize_amount
     question = [
         {
             'type': 'list',
@@ -75,9 +93,19 @@ def ask_winners_amount():
     answers = prompt(question)
 
     if answers['theme'] == "One":
-        run_for_single_winner()
+        prize_amount = 1
     else:
-        print("world")
+        question = [
+            {
+                'type': 'input',
+                'name': 'prize_amount',
+                'message': 'Write amount of prizes',
+            },
+        ]
+        answers = prompt(question)
+        prize_amount = int(answers["prize_amount"])
+    ask_for_prize()
+
 
 if __name__ == "__main__":
     main()
